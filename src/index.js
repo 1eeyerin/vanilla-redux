@@ -8,8 +8,24 @@ const ul = document.querySelector("ul");
 const ADD_TODO = "ADD_TODO";
 const DELETE_TODO = "DELETE_TODO";
 
-//create store
-const store = createStore(reducer);
+//reducer
+const reducer = (state = [], action) => {
+    switch (action.type){
+        default:
+            return state;
+        case ADD_TODO:
+            return [
+                {
+                    text:action.text,
+                    id:Date.now(),
+                },
+                ...state
+            ];
+        case DELETE_TODO:
+            return state.filter(toDo => toDo.id !== parseInt(action.id));
+    }
+}
+
 
 //action creator
 const addToDo = (text) => {
@@ -25,24 +41,8 @@ const deleteToDo = (id) => {
     }
 }
 
-//reducer
-const reducer = (state = [], action) => {
-    switch (action.type){
-        default:
-            return state;
-        case ADD_TODO:
-            return [
-                {
-                    text:action.text,
-                    id:Date.now(),
-                },
-                ...state
-            ];
-        case DELETE_TODO:
-            return [];
-    }
-}
-
+//create store
+const store = createStore(reducer);
 
 //dispatch action
 const dispatchAddToDo = (text) => {
@@ -64,7 +64,7 @@ const paintToDos = () => {
         li.innerText = toDo.text;
         btn.innerText = "DEL";
         btn.style.marginLeft = '5px';
-        btn.addEventListener("click", deleteToDo);
+        btn.addEventListener("click", dispatchDeleteToDo);
         li.appendChild(btn);
         ul.appendChild(li);
     });
@@ -78,7 +78,7 @@ const onSubmit = e => {
     e.preventDefault();
     const toDo = input.value;
     input.value = "";
-    addToDo(toDo);
+    dispatchAddToDo(toDo);
 }
 
 form.addEventListener("submit", onSubmit);
