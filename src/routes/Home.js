@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import styled from "styled-components";
 import {connect} from "react-redux";
 import {actionCreators} from "../store";
+import ToDo from "../components/ToDo";
 
 function Home(props){
     const {
@@ -22,18 +23,14 @@ function Home(props){
     return(
         <Container>
             <h1>To Do</h1>
-            <form onSubmit={onSubmit }>
+            <form onSubmit={onSubmit}>
                 <input type="text" placeholder={"Text Todo..."} value={text} onChange={onChange} />
                 <button type="submit ">ADD</button>
             </form>
             <ul>
                 {
                     toDos.map((item)=>{
-                        return(
-                            <li key={item.id} id={item.id}>
-                                <p>{item.text}</p>
-                            </li>
-                        )
+                        return <ToDo {...item} key={item.id} deleteToDo={deleteToDo} />
                     })
                 }
             </ul>
